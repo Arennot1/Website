@@ -138,6 +138,18 @@
             top: 3rem;
             left: 3rem;
             z-index: 40;
+            cursor: pointer; /* Make it interactive */
+        }
+        
+        /* UPDATED: Full screen canvas for ripple effect */
+        #logo-canvas {
+            position: fixed; /* Changed to fixed to cover entire viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998; /* High z-index but just below the curtain */
         }
         
         /* Footer Strip */
@@ -198,7 +210,7 @@
         }
         .content-header > * { pointer-events: auto; }
 
-        /* NEW: Dark Mode Header Class (for HI page) */
+        /* Dark Mode Header Class (for HI page) */
         .content-header.dark-mode {
             color: white !important;
         }
@@ -230,7 +242,6 @@
         .hero-image-block {
             width: 90%;
             height: 70%;
-            /* Minimalist grey placeholder if image fails, or use image */
             background-color: #f0f0f0; 
             position: relative;
             display: flex;
@@ -239,32 +250,24 @@
             overflow: hidden;
         }
 
-        /* FIX: Ensure single line and visible color */
         .hero-title-overlay {
             position: absolute;
             font-family: 'Inter', sans-serif; 
             font-weight: 900;
-            /* FIX: Use clamp to scale text responsively so it fits on one line */
             font-size: clamp(3rem, 13vw, 12rem);
             text-transform: uppercase;
             line-height: 0.9;
             z-index: 10;
             color: transparent;
-            /* Dynamic Stroke Color based on background usually, but sticking to white for hero overlay */
             -webkit-text-stroke: 2px white; 
             text-align: right;
-            
-            /* FIX: Moved right position inwards to "bring it more intro" */
             right: 5%; 
             bottom: 10%;
             pointer-events: none;
             transform: none; 
-            
-            /* FIX: Prevent wrapping */
             white-space: nowrap; 
         }
         
-        /* Specific fix for white background hero titles (like Sandbox) */
         .hero-title-dark-stroke {
              -webkit-text-stroke: 2px var(--text-main) !important;
         }
@@ -297,7 +300,6 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
-            /* Removed border bottom to be cleaner */
         }
         #hi-content .hi-hero-grid {
             position: absolute;
@@ -521,8 +523,11 @@
 
     <!-- ================= MAIN MENU VIEW ================= -->
     <div id="main-view">
+        <!-- Canvas for ripple effect - Now full screen -->
+        <canvas id="logo-canvas"></canvas>
+
         <!-- Logo: Top Left -->
-        <div class="branding-logo">
+        <div class="branding-logo" onclick="triggerLogoEffect(event)">
             <img src="logo.png" alt="Areen Logo" class="h-24 w-auto">
         </div>
 
@@ -903,6 +908,83 @@
         };
 
         let currentViewContext = 'main';
+
+        // --- UPDATED: Ripple Effect Setup ---
+        const canvas = document.getElementById('logo-canvas');
+        const ctx = canvas.getContext('2d');
+        let ripples = [];
+
+        // Make canvas full screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Initial call
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 0;
+                // Calculate max radius needed to cover the screen from the start point to bottom-right corner
+                const dx = canvas.width - this.x;
+                const dy = canvas.height - this.y;
+                // Use Pythagorean theorem + extra buffer to ensure it goes off-screen
+                this.maxRadius = Math.sqrt(dx * dx + dy * dy) + 100; 
+                this.speed = 5 + Math.random() * 5; // Speed of expansion
+                this.opacity = 1;
+                this.lineWidth = 2 + Math.random() * 3;
+            }
+            update() {
+                this.radius += this.speed;
+                // Fade out as it gets bigger relative to its max radius
+                this.opacity = 1 - (this.radius / this.maxRadius);
+                if (this.opacity < 0) this.opacity = 0;
+            }
+            draw() {
+                ctx.beginPath();
+                // Draw an arc (circle)
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(0, 0, 0, ${this.opacity})`;
+                ctx.lineWidth = this.lineWidth;
+                ctx.stroke();
+            }
+        }
+
+        function animateRipples() {
+            // Clear the entire canvas for the next frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < ripples.length; i++) {
+                ripples[i].update();
+                ripples[i].draw();
+                // Remove dead ripples
+                if (ripples[i].opacity <= 0 || ripples[i].radius >= ripples[i].maxRadius) {
+                    ripples.splice(i, 1);
+                    i--;
+                }
+            }
+            if(ripples.length > 0) requestAnimationFrame(animateRipples);
+        }
+
+        function triggerLogoEffect(event) {
+             // Find the exact center of the logo image
+             const logoImg = document.querySelector('.branding-logo img');
+             const rect = logoImg.getBoundingClientRect();
+             const centerX = rect.left + rect.width / 2;
+             const centerY = rect.top + rect.height / 2;
+
+             // Spawn a series of concentric ripples
+             let spawned = 0;
+             const interval = setInterval(() => {
+                 ripples.push(new Ripple(centerX, centerY));
+                 spawned++;
+                 if(spawned === 1 && ripples.length === 1) animateRipples(); // Start animation loop if first ripple
+                 if(spawned >= 5) clearInterval(interval); // Stop after spawning 5 waves
+             }, 150); // Delay between waves for "plop" effect
+        }
+        // --- End Ripple Effect ---
 
         function resetContentView() {
             contentView.style.transform = 'none';
