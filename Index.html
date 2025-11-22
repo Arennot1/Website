@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Areen Pednekar | Product & Industrial Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* REBRANDED COLORS: White & Black */
+            --bg-color: #ffffff;
+            --text-main: #000000;
+            --text-sub: #555555;
+            --accent-gray: #f4f4f4;
+            --hero-dark-bg: #111111; /* Dark gray/black for HI hero */
+            --contact-bg: #050505; /* Very dark black for Contact */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            cursor: default;
+        }
+
+        /* --- UTILITIES --- */
+        .hidden-view { display: none !important; }
+        .hidden-content { display: none; }
+        .font-script { font-family: 'Permanent Marker', cursive; }
+        
+        /* Loader Curtain (Black) */
+        #transition-curtain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            transform: translateY(100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- MAIN MENU VIEW --- */
+        #main-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+
+        /* 3D Menu Container */
+        .perspective-container {
+            perspective: 1000px;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 4vw; 
+            transform-style: preserve-3d;
+            pointer-events: none; 
+            position: relative;
+            z-index: 20;
+        }
+
+        .slanted-list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            transform: rotate(-6deg); 
+            transform-origin: center right;
+            pointer-events: auto;
+        }
+
+        .menu-item {
+            font-size: 12.5vh;
+            line-height: 0.82;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            
+            /* Solid Black Text */
+            color: var(--text-main);
+            -webkit-text-stroke: 0;
+            
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            z-index: 60; 
+        }
+
+        .menu-tag {
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            position: absolute;
+            top: 25%;
+            left: -40px;
+            color: var(--text-main);
+            opacity: 0.5; 
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+        }
+
+        /* Hover Effect: Wireframe Outline */
+        .menu-item:hover {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--text-main);
+            transform: translateX(-40px) scale(1.05);
+        }
+
+        .menu-item:hover .menu-tag {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* --- BRANDING & FOOTER --- */
+        
+        /* Logo - Top Left Position */
+        .branding-logo {
+            position: absolute;
+            top: 3rem;
+            left: 3rem;
+            z-index: 40;
+        }
+        
+        /* Footer Strip */
+        .footer-strip {
+            position: absolute;
+            bottom: 3rem;
+            left: 0;
+            width: 100%;
+            padding: 0 3rem;
+            z-index: 40;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: none;
+            
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .footer-col-group { display: flex; gap: 4vw; pointer-events: auto; }
+        .footer-block { display: flex; flex-direction: column; }
+        .footer-block a { text-decoration: none; color: var(--text-main); transition: opacity 0.2s; }
+        .footer-block a:hover { opacity: 0.6; }
+        .block-label { opacity: 0.5; margin-bottom: 2px; }
+        .numbered-row { display: flex; gap: 1rem; }
+        .num { opacity: 0.4; width: 2ch; display: inline-block; }
+
+        /* --- CONTENT VIEW --- */
+        #content-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            overflow-y: auto;
+            z-index: 100;
+            /* Reset transforms to prevent text chopping */
+            transform: none !important;
+        }
+
+        .content-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 110;
+            pointer-events: none;
+            transition: color 0.3s ease; /* Smooth color transition */
+        }
+        .content-header > * { pointer-events: auto; }
+
+        /* NEW: Dark Mode Header Class (for HI page) */
+        .content-header.dark-mode {
+            color: white !important;
+        }
+        .content-header.dark-mode .content-logo img {
+            filter: invert(1); /* Invert black logo to white */
+        }
+        .content-header.dark-mode .back-btn {
+            color: white !important;
+        }
+
+        .back-btn {
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: var(--text-main);
+        }
+        .back-btn:hover { transform: translateX(-5px); }
+
+        /* Content Hero */
+        .hero-section {
+            height: 80vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10vh;
+        }
+
+        .hero-image-block {
+            width: 90%;
+            height: 70%;
+            /* Minimalist grey placeholder if image fails, or use image */
+            background-color: #f0f0f0; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* FIX: Ensure single line and visible color */
+        .hero-title-overlay {
+            position: absolute;
+            font-family: 'Inter', sans-serif; 
+            font-weight: 900;
+            /* FIX: Use clamp to scale text responsively so it fits on one line */
+            font-size: clamp(3rem, 13vw, 12rem);
+            text-transform: uppercase;
+            line-height: 0.9;
+            z-index: 10;
+            color: transparent;
+            /* Dynamic Stroke Color based on background usually, but sticking to white for hero overlay */
+            -webkit-text-stroke: 2px white; 
+            text-align: right;
+            
+            /* FIX: Moved right position inwards to "bring it more intro" */
+            right: 5%; 
+            bottom: 10%;
+            pointer-events: none;
+            transform: none; 
+            
+            /* FIX: Prevent wrapping */
+            white-space: nowrap; 
+        }
+        
+        /* Specific fix for white background hero titles (like Sandbox) */
+        .hero-title-dark-stroke {
+             -webkit-text-stroke: 2px var(--text-main) !important;
+        }
+
+        .content-footer {
+            padding: 3rem;
+            border-top: 1px solid #eee;
+            margin-top: 5rem;
+        }
+        
+        .footer-black {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+        }
+        .footer-black .footer-col-group { gap: 4vw; }
+        .footer-black a { color: var(--text-main); }
+
+        /* --- HI Hero Specific Styles --- */
+        #hi-content .hi-hero {
+            background-color: var(--hero-dark-bg);
+            color: white;
+            height: 100vh; /* Full screen hero */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            /* Removed border bottom to be cleaner */
+        }
+        #hi-content .hi-hero-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+        }
+        #hi-content .hi-title {
+            font-size: clamp(2.5rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-align: center;
+            z-index: 10;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        #hi-content .hi-subtitle {
+            font-size: clamp(1rem, 3vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1.2;
+            text-align: center;
+            z-index: 10;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        #hi-content .hi-subtitle span {
+            font-weight: 900;
+        }
+
+        /* --- CONTACT SPECIFIC STYLES --- */
+        #contact-content {
+            background-color: var(--contact-bg);
+            color: white;
+            min-height: 100vh;
+            padding-top: 100px; /* Clear header */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .greetings-carousel {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 4rem;
+            height: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+        .greeting-word {
+            position: absolute;
+            width: 100%;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .greeting-word.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact-hero {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 40px; /* Reduced space */
+        }
+        
+        .contact-title {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 4rem;
+            letter-spacing: -0.03em;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: auto;
+        }
+
+        .contact-bio {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 500px;
+            margin-bottom: 4rem;
+        }
+
+        .contact-email {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .social-links a {
+            color: #999;
+            margin-right: 2rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .social-links a:hover { color: white; }
+
+        .contact-cta {
+            font-size: 1.1rem;
+            color: #ccc;
+            max-width: 400px;
+            text-align: right;
+            align-self: flex-end;
+        }
+        
+        /* --- RESUME STYLES --- */
+        .resume-image-container {
+            padding-top: 80px; /* Space for fixed header */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .resume-page-img {
+            width: clamp(300px, 80vw, 900px); /* Responsive max width for image pages */
+            height: auto;
+            margin: 1rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- PROJECT STYLES --- */
+        .project-category-item {
+            font-size: 8vh;
+            line-height: 0.9;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            -webkit-text-stroke: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            transform: none !important;
+            /* FIX: Prevent wrapping here too */
+            white-space: nowrap;
+        }
+        
+        .project-category-item:hover {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--text-main);
+            transform: translateX(20px) !important;
+        }
+
+        .sub-project-list { margin-top: 2rem; margin-left: 2rem; display: none; }
+        .sub-project-list.active { display: block; }
+        .sub-project-item { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; cursor: pointer; color: #666; transition: color 0.2s; }
+        .sub-project-item:hover { color: #000; text-decoration: underline; }
+
+        /* CASE STUDY HERO */
+        .case-study-hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-height: 900px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .case-study-cover-img { width: 100%; height: 100%; object-fit: cover; }
+        .overlay-content { position: absolute; bottom: 10vh; left: 5vw; color: white; z-index: 10; max-width: 600px; }
+        .tag-pill { display: inline-block; border: 1px solid rgba(255,255,255,0.6); padding: 0.25rem 1rem; border-radius: 9999px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; backdrop-filter: blur(4px); }
+        .project-title { font-family: 'Permanent Marker', cursive; font-size: 5rem; line-height: 1.1; margin-bottom: 1rem; transform: rotate(-2deg); }
+        .project-desc { font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem; font-weight: 300; opacity: 0.9; }
+        .tool-pill { background-color: white; color: black; padding: 0.5rem 1.5rem; border-radius: 9999px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; margin-right: 0.5rem; margin-bottom: 0.5rem; display: inline-block; }
+
+        /* === MODIFIER: Light Cover Text (For White/Light Image Backgrounds) === */
+        .light-cover-text .overlay-content { 
+            color: var(--text-main); /* Black text */
+        }
+        .light-cover-text .tag-pill {
+            border: 1px solid rgba(0,0,0,0.3); /* Black border */
+            color: var(--text-main); /* Black text */
+            backdrop-filter: none;
+        }
+        .light-cover-text .project-title {
+            color: var(--text-main); /* Black title text */
+            -webkit-text-stroke: 1px var(--text-main); /* Small black stroke */
+        }
+        .light-cover-text .project-desc {
+            color: var(--text-main); /* Black description text */
+            opacity: 0.8;
+        }
+        .light-cover-text .tool-pill {
+            background-color: var(--text-main); /* Black background */
+            color: white; /* White text on black pill */
+        }
+        /* --- MOBILE --- */
+        @media (max-width: 1024px) {
+            .branding-logo { top: 2rem; left: 1.5rem; }
+            .footer-strip { flex-direction: column; align-items: flex-start; gap: 2rem; bottom: 1.5rem; left: 1.5rem; padding: 0; width: auto; }
+            .footer-col-group { flex-direction: column; gap: 1.5rem; }
+            .slanted-list { transform: rotate(0deg); align-items: center; padding-right: 0; translateY: 0; }
+            .menu-item { font-size: 14vw; color: transparent; -webkit-text-stroke: 1px var(--text-main); } 
+            .menu-item:hover { color: var(--text-main); }
+            .content-header { padding: 1.5rem; }
+            .hero-title-overlay { font-size: 20vw; right: 0; }
+            .project-category-item { font-size: 10vw; }
+            .project-title { font-size: 3rem; }
+            .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .contact-cta { text-align: left; align-self: flex-start; }
+            .contact-title { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Transition Curtain -->
+    <div id="transition-curtain"></div>
+
+    <!-- ================= MAIN MENU VIEW ================= -->
+    <div id="main-view">
+        <!-- Logo: Top Left -->
+        <div class="branding-logo">
+            <img src="logo.png" alt="Areen Logo" class="h-24 w-auto">
+        </div>
+
+        <!-- Footer Strip -->
+        <div class="footer-strip">
+            <div class="footer-col-group">
+                <div class="footer-block">
+                    <span>Product & Industrial</span>
+                    <span>Designer</span>
+                </div>
+                <div class="footer-block">
+                    <span class="block-label">Global / Remote</span>
+                    <a href="mailto:areenpednekarbusiness@gmail.com">areenpednekarbusiness<br>@gmail.com</a>
+                </div>
+            </div>
+
+            <div class="footer-col-group">
+                <div class="footer-block">
+                    <div class="numbered-row">
+                        <span class="num">01</span>
+                        <a href="https://www.linkedin.com/in/areen-pednekar-96a1b423b/" target="_blank">LinkedIn</a>
+                    </div>
+                    <div class="numbered-row">
+                        <span class="num">02</span>
+                        <a href="https://www.instagram.com/__areen_pednekar__/?utm_source=ig_web_button_share_sheet" target="_blank">Instagram</a>
+                    </div>
+                </div>
+                <div class="footer-block text-right">
+                    <span class="block-label">Design</span>
+                    <span>© 2025 Areen</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="perspective-container">
+            <div class="slanted-list" id="menu-list">
+                <div class="menu-item group" onclick="navigateTo('Hi')">
+                    <span class="menu-tag">01</span>Hi
+                </div>
+                <div class="menu-item group" onclick="navigateTo('Projects')">
+                    <span class="menu-tag">02</span>Projects
+                </div>
+                <div class="menu-item group" onclick="navigateTo('Contact')">
+                    <span class="menu-tag">03</span>Contact
+                </div>
+                <div class="menu-item group" onclick="navigateTo('Resume')">
+                    <span class="menu-tag">04</span>Resume
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= CONTENT VIEW ================= -->
+    <div id="content-view" class="hidden-view">
+        <!-- Global Header -->
+        <header class="content-header" id="global-header">
+            <div class="content-logo">
+                <img src="logo.png" alt="Areen Logo" class="h-12 w-auto">
+            </div>
+            <nav class="content-nav hidden md:flex"></nav>
+            <div class="back-btn" onclick="handleBackNavigation()">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </div>
+        </header>
+
+        <!-- 1. HI CONTENT (About Me - Dark Theme) -->
+        <div id="hi-content">
+            <section class="hi-hero">
+                <div class="hi-hero-grid"></div>
+                
+                <!-- Main Title from Screenshot -->
+                <div class="text-white text-center z-10 p-4">
+                    <h2 class="hi-subtitle font-normal italic mb-4">I'm <span class="not-italic font-extrabold">AREEN,</span> a</h2>
+                    <h1 class="hi-title">PRODUCT & INDUSTRIAL</h1>
+                    <h1 class="hi-title">DESIGNER</h1>
+                </div>
+
+                <!-- Simple Placeholder for Objects (Pencil/Eraser) -->
+                <div class="absolute top-10 right-10 w-24 h-48 z-0 opacity-20 hidden md:block">
+                    <div class="w-2 h-40 bg-yellow-500 rounded-t-full transform rotate-12 absolute top-0"></div>
+                </div>
+                <div class="absolute bottom-10 left-10 w-32 h-10 z-0 opacity-20 hidden md:block">
+                    <div class="w-full h-full bg-gray-400 transform -rotate-12"></div>
+                </div>
+            </section>
+            <section class="px-12 py-20 max-w-4xl mx-auto">
+                <p class="text-xl md:text-3xl font-bold leading-tight mb-8">
+                    "I transform complex problems into intuitive, aesthetically pleasing product experiences."
+                </p>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    My design philosophy is rooted in empathy and technical precision, blending the analytical process of problem-solving with the creative freedom of industrial design. Whether I'm tackling digital UX flows or engineering the physical form of a new product, I am driven by the belief that the best designs are both beautiful and inherently useful.
+                </p>
+            </section>
+        </div>
+
+        <!-- 2. RESUME CONTENT (Image Based) -->
+        <div id="resume-content" class="hidden-content">
+            <div class="resume-image-container">
+                <img src="resume.jpg" alt="Resume Page 1" class="resume-page-img">
+                <img src="resume 2.jpg" alt="Resume Page 2" class="resume-page-img">
+            </div>
+        </div>
+
+        <!-- 3. PROJECTS CONTENT -->
+        <div id="projects-content" class="hidden-content">
+            <section class="px-12 py-12 mt-24 max-w-6xl mx-auto">
+                <div class="flex flex-col space-y-8">
+                    <div class="project-group">
+                        <div class="project-category-item" onclick="toggleSubProjects('uiux-list')">
+                            UI/UX
+                        </div>
+                        <div id="uiux-list" class="sub-project-list">
+                            <div class="sub-project-item" onclick="openCaseStudy('surfing')">01. Surfing App</div>
+                            <div class="sub-project-item" onclick="openCaseStudy('kaari')">02. Kaari</div>
+                            <div class="sub-project-item" onclick="openCaseStudy('irctc')">03. IRCTC Redesign</div>
+                        </div>
+                    </div>
+                    <div class="project-category-item">RESEARCH</div>
+                    <div class="project-group">
+                        <div class="project-category-item" onclick="toggleSubProjects('interior-list')">
+                            INTERIOR DESIGN
+                        </div>
+                        <div id="interior-list" class="sub-project-list">
+                            <div class="sub-project-item" onclick="openCaseStudy('koya')">01. KOYA</div>
+                        </div>
+                    </div>
+                    <div class="project-group">
+                        <div class="project-category-item" onclick="toggleSubProjects('industrial-list')">
+                            INDUSTRIAL DESIGN
+                        </div>
+                        <div id="industrial-list" class="sub-project-list">
+                            <div class="sub-project-item" onclick="openCaseStudy('sewing')">01. Hand Sewing Machine Redesign</div>
+                            <div class="sub-project-item" onclick="openCaseStudy('yuma')">02. Yuma</div>
+                            <div class="sub-project-item" onclick="openCaseStudy('smoothie')">03. Smoothie Machine</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- 4. CONTACT CONTENT (New Dark Theme) -->
+        <div id="contact-content" class="hidden-content">
+            <div class="px-12 w-full h-full flex flex-col">
+                <!-- Carousel -->
+                <div class="greetings-carousel">
+                    <div class="greeting-word active">Hello.</div>
+                    <div class="greeting-word">Namaste.</div>
+                    <div class="greeting-word">Hola.</div>
+                    <div class="greeting-word">Bonjour.</div>
+                    <div class="greeting-word">Ciao.</div>
+                </div>
+
+                <div class="contact-hero">
+                    <h1 class="contact-title">Let's talk.</h1>
+                    
+                    <p class="contact-bio text-gray-300">
+                        Hi, I'm Areen, a Product & Industrial Designer with a love for problem-solving and innovation. 
+                        I dabble between mechanical engineering and aesthetic form, adapting to each project's unique needs.
+                    </p>
+
+                    <div class="contact-grid">
+                        <div>
+                            <a href="mailto:areenpednekarbusiness@gmail.com" class="contact-email break-all">areenpednekarbusiness@gmail.com</a>
+                            <div class="social-links mt-6 text-sm">
+                                <a href="https://www.instagram.com/__areen_pednekar__/?utm_source=ig_web_button_share_sheet" target="_blank">Instagram ↗</a>
+                                <a href="https://www.linkedin.com/in/areen-pednekar-96a1b423b/" target="_blank">LinkedIn ↗</a>
+                            </div>
+                        </div>
+                        <div class="contact-cta">
+                            Got a project in mind? Feel free to reach out to me via email or connect on social media to discuss how we can make it happen!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. INDIVIDUAL CASE STUDY VIEWS -->
+        <div id="case-study-surfing" class="hidden-content">
+            <div class="case-study-hero" style="background-color: #005C68;">
+                <div class="absolute inset-0 flex items-center justify-center">
+                     <img src="1.1-1.1.jpg" class="case-study-cover-img object-contain" alt="Surfing App Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">MOBILE APP</div>
+                    <h1 class="project-title">Surfing App</h1>
+                    <p class="project-desc">Real-time wave tracking. A fluid experience connecting surfers to the ocean's rhythm.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">FIGMA</span>
+                        <span class="tool-pill">MIRO</span>
+                        <span class="tool-pill">FIGJAM</span>
+                        <span class="tool-pill">FORMS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="1.1.-1.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="Surfing App Details">
+            </div>
+            <div class="py-24 bg-white text-center border-t border-gray-100">
+                <a href="https://www.figma.com/proto/lLtUiraqZ9ArR73VyPvT7S/Surf-Project-Community?page-id=0%3A1&node-id=1-1874&viewport=4%2C105%2C0.13&t=7GondzKWNrOTkdQt-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=1%3A1874" target="_blank" class="inline-block bg-black text-white px-12 py-5 rounded-full text-xl font-bold hover:scale-105 transition-transform duration-300 shadow-xl">View Prototype ↗</a>
+            </div>
+        </div>
+
+        <div id="case-study-kaari" class="hidden-content">
+            <div class="case-study-hero" style="background-color: #D84315;">
+                <div class="absolute inset-0 flex items-center justify-center">
+                     <img src="2.2-2.2.jpg" class="case-study-cover-img object-contain" alt="Kaari Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">ARTISAN MARKETPLACE</div>
+                    <h1 class="project-title">Kaari</h1>
+                    <p class="project-desc">Bridging the gap between traditional craftsmanship and modern commerce for artisans.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">FIGMA</span>
+                        <span class="tool-pill">PHOTOSHOP</span>
+                        <span class="tool-pill">ILLUSTRATOR</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="2.2.-2.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="Kaari Details">
+            </div>
+        </div>
+
+        <div id="case-study-irctc" class="hidden-content">
+            <div class="case-study-hero" style="background-color: #1A237E;">
+                <div class="absolute inset-0 flex items-center justify-center">
+                     <img src="3.3-3.3.jpg" class="case-study-cover-img object-contain" alt="IRCTC Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">TRAVEL APP</div>
+                    <h1 class="project-title">IRCTC</h1>
+                    <p class="project-desc">A modern reimagining of railway booking. Streamlined flows for daily travelers.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">FIGMA</span>
+                        <span class="tool-pill">WIREFRAMING</span>
+                        <span class="tool-pill">RESEARCH</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="3.3.-3.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="IRCTC Details">
+            </div>
+            <div class="py-24 bg-white text-center border-t border-gray-100">
+                <a href="https://www.figma.com/proto/lg3fcsZ6d2Ay7s4EMjfqMs/final-uiux?page-id=0%3A1&node-id=44-830&viewport=1339%2C428%2C0.22&t=2YSlGI45ySDj7VSy-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=44%3A768" target="_blank" class="inline-block bg-black text-white px-12 py-5 rounded-full text-xl font-bold hover:scale-105 transition-transform duration-300 shadow-xl">View Prototype ↗</a>
+            </div>
+        </div>
+        
+        <div id="case-study-koya" class="hidden-content">
+            <div class="case-study-hero" style="background-color: #614830;">
+                <div class="absolute inset-0 flex items-center justify-center opacity-90">
+                    <img src="4.4-4.4.jpg" 
+                         class="case-study-cover-img object-cover mix-blend-overlay" alt="KOYA Interior Design Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">FURNITURE CATALOGUE</div>
+                    <h1 class="project-title">KOYA</h1>
+                    <p class="project-desc">A curated catalogue of designed furniture focusing on aesthetics and 3D visualization.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">3D MODELING</span>
+                        <span class="tool-pill">VISUALIZATION</span>
+                        <span class="tool-pill">CATALOGUE DESIGN</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="4.4.-4.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="KOYA Details">
+            </div>
+        </div>
+
+        <div id="case-study-sewing" class="hidden-content">
+            <div class="case-study-hero light-cover-text" style="background-color: #F0F0F0;">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <img src="5.5-5.5.jpg" class="case-study-cover-img object-contain" alt="Hand Sewing Machine Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">PRODUCT REDESIGN</div>
+                    <h1 class="project-title" style="font-size: 3.5rem;">Hand Sewing Machine</h1>
+                    <p class="project-desc">Reimagining portability and ergonomics for contemporary sewing needs.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">MECHANICAL</span>
+                        <span class="tool-pill">ERGONOMICS</span>
+                        <span class="tool-pill">PRODUCT</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="5.5.-5.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="Sewing Machine Details">
+            </div>
+        </div>
+
+        <div id="case-study-yuma" class="hidden-content">
+            <div class="case-study-hero light-cover-text" style="background-color: #F0F0F0;">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <img src="6.6-6.6.jpg" class="case-study-cover-img object-contain" alt="Yuma Battery Solution Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">BATTERY SOLUTION</div>
+                    <h1 class="project-title">Yuma</h1>
+                    <p class="project-desc">A solution focused on battery management, electronics, and power delivery.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">ELECTRONICS</span>
+                        <span class="tool-pill">POWER MGMT</span>
+                        <span class="tool-pill">3D MODELING</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="6.6.-6.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="Yuma Details">
+            </div>
+        </div>
+        
+        <div id="case-study-smoothie" class="hidden-content">
+            <div class="case-study-hero light-cover-text" style="background-color: #F0F0F0;">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <img src="7.7-7.7.jpg" class="case-study-cover-img object-contain" alt="Smoothie Machine Cover">
+                </div>
+                <div class="overlay-content">
+                    <div class="tag-pill">FOODTECH DEVICE</div>
+                    <h1 class="project-title" style="font-size: 4rem;">Smoothie Machine</h1>
+                    <p class="project-desc">Automated, customizable smoothie dispensing system for high-traffic locations.</p>
+                    <div class="flex flex-wrap">
+                        <span class="tool-pill">HMI DESIGN</span>
+                        <span class="tool-pill">DISPENSING</span>
+                        <span class="tool-pill">RENDERING</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white">
+                <img src="7.7.-7.jpg" class="w-full h-auto mx-auto max-w-7xl block" alt="Smoothie Machine Details">
+            </div>
+        </div>
+
+        <footer class="content-footer footer-black">
+             <div class="footer-col-group">
+                <div class="footer-block">
+                    <span class="block-label" style="color:#999">Areen Pednekar</span>
+                    <span>Product & Industrial</span>
+                </div>
+                <div class="footer-block">
+                     <span class="block-label" style="color:#999">Contact</span>
+                     <a href="#">areenpednekarbusiness@gmail.com</a>
+                </div>
+             </div>
+             <div class="footer-col-group">
+                 <div class="footer-block">
+                    <span>© 2025</span>
+                 </div>
+             </div>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        const curtain = document.getElementById('transition-curtain');
+        const mainView = document.getElementById('main-view');
+        const contentView = document.getElementById('content-view');
+        const globalHeader = document.getElementById('global-header');
+        
+        const sections = {
+            'Hi': document.getElementById('hi-content'),
+            'Resume': document.getElementById('resume-content'),
+            'Projects': document.getElementById('projects-content'),
+            'Contact': document.getElementById('contact-content')
+        };
+
+        const caseStudies = {
+            'surfing': document.getElementById('case-study-surfing'),
+            'kaari': document.getElementById('case-study-kaari'),
+            'irctc': document.getElementById('case-study-irctc'),
+            'koya': document.getElementById('case-study-koya'),
+            'sewing': document.getElementById('case-study-sewing'),
+            'yuma': document.getElementById('case-study-yuma'),
+            'smoothie': document.getElementById('case-study-smoothie')
+        };
+
+        let currentViewContext = 'main';
+
+        function resetContentView() {
+            contentView.style.transform = 'none';
+            document.querySelectorAll('.hero-title-overlay').forEach(el => el.style.transform = 'none');
+        }
+
+        function updateHeaderColor(pageName) {
+            globalHeader.classList.remove('dark-mode');
+            // Dark mode active for HI and CONTACT pages
+            if (pageName === 'Hi' || pageName === 'Contact') {
+                globalHeader.classList.add('dark-mode');
+            }
+        }
+
+        function navigateTo(pageName) {
+            gsap.set(curtain, { y: "100%" });
+            gsap.to(curtain, {
+                duration: 0.6, y: "0%", ease: "power3.inOut",
+                onComplete: () => {
+                    mainView.classList.add('hidden-view');
+                    contentView.classList.remove('hidden-view');
+                    resetContentView();
+                    
+                    updateHeaderColor(pageName);
+
+                    document.querySelectorAll('.hidden-content').forEach(el => el.style.display = 'none');
+                    Object.values(sections).forEach(el => el.style.display = 'none');
+                    Object.values(caseStudies).forEach(el => el.style.display = 'none');
+                    
+                    const selectedSection = sections[pageName];
+                    if(selectedSection) {
+                        selectedSection.style.display = 'block';
+                        // Special logic for Contact page to be flex
+                        if(pageName === 'Contact') {
+                           selectedSection.style.display = 'flex';
+                           startGreetingCarousel(); // Start animation
+                        }
+                        currentViewContext = (pageName === 'Projects') ? 'projects' : 'content';
+                    }
+                    gsap.to(curtain, { duration: 0.6, y: "-100%", ease: "power3.inOut" });
+                }
+            });
+        }
+
+        function toggleSubProjects(listId) {
+            const list = document.getElementById(listId);
+            list.classList.toggle('active');
+        }
+
+        function openCaseStudy(studyId) {
+            gsap.to(curtain, {
+                duration: 0.4, y: "0%", ease: "power3.inOut",
+                onComplete: () => {
+                    document.getElementById('projects-content').style.display = 'none';
+                    
+                    globalHeader.classList.remove('dark-mode');
+
+                    caseStudies[studyId].style.display = 'block';
+                    currentViewContext = 'casestudy';
+                    resetContentView();
+                    document.getElementById(`case-study-${studyId}`).scrollTop = 0; 
+                    gsap.to(curtain, { duration: 0.4, y: "-100%", ease: "power3.inOut" });
+                }
+            });
+        }
+
+        function handleBackNavigation() {
+            gsap.set(curtain, { y: "100%" });
+            gsap.to(curtain, {
+                duration: 0.6, y: "0%", ease: "power3.inOut",
+                onComplete: () => {
+                    if (currentViewContext === 'casestudy') {
+                        Object.values(caseStudies).forEach(el => el.style.display = 'none');
+                        document.getElementById('projects-content').style.display = 'block';
+                        currentViewContext = 'projects';
+                        resetContentView();
+                        globalHeader.classList.remove('dark-mode');
+                    } else {
+                        contentView.classList.add('hidden-view');
+                        mainView.classList.remove('hidden-view');
+                        currentViewContext = 'main';
+                        globalHeader.classList.remove('dark-mode');
+                    }
+                    gsap.to(curtain, { duration: 0.6, y: "-100%", ease: "power3.inOut" });
+                }
+            });
+        }
+        const backToMenu = handleBackNavigation; 
+
+        // Carousel Logic
+        function startGreetingCarousel() {
+            const words = document.querySelectorAll('.greeting-word');
+            let currentIndex = 0;
+            
+            // Reset
+            words.forEach(w => w.classList.remove('active'));
+            words[0].classList.add('active');
+
+            if(window.carouselInterval) clearInterval(window.carouselInterval);
+
+            window.carouselInterval = setInterval(() => {
+                words[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % words.length;
+                words[currentIndex].classList.add('active');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
