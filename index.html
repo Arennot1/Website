@@ -5,171 +5,222 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Areen Pednekar | Product & Industrial Designer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #ffffff;
             --text-main: #000000;
+            --text-sub: #555555;
+            --accent-gray: #f4f4f4;
+            --hero-dark-bg: #111111; 
+            --contact-bg: #050505; 
         }
 
-        body, html {
-            margin: 0; padding: 0;
+        body {
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             overflow: hidden;
-            height: 100%; width: 100%;
+            height: 100vh;
+            width: 100vw;
+            cursor: default;
         }
 
-        /* --- PERSPECTIVE & MENU --- */
-        #main-view {
-            position: relative;
-            width: 100%; height: 100%;
+        /* --- UTILITIES --- */
+        .hidden-view { display: none !important; }
+        .hidden-content { display: none; }
+        .font-script { font-family: 'Permanent Marker', cursive; }
+        
+        #transition-curtain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            transform: translateY(100%);
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
+        }
+
+        /* --- MAIN MENU VIEW --- */
+        #main-view {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            overflow: hidden;
         }
 
         .perspective-container {
             perspective: 1000px;
-            width: 100%;
+            height: 100%; width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center; /* Center on mobile */
-            z-index: 50;
-        }
-
-        @media (min-width: 768px) {
-            .perspective-container { justify-content: flex-end; padding-right: 6vw; }
+            justify-content: flex-end;
+            padding-right: 4vw; 
+            transform-style: preserve-3d;
+            pointer-events: none; 
+            position: relative;
+            z-index: 20;
         }
 
         .slanted-list {
             display: flex;
             flex-direction: column;
-            transform: rotate(-4deg); 
-            transform-style: preserve-3d;
-        }
-
-        @media (min-width: 768px) {
-            .slanted-list { align-items: flex-end; transform: rotate(-6deg); }
+            align-items: flex-end;
+            transform: rotate(-6deg); 
+            transform-origin: center right;
+            pointer-events: auto;
         }
 
         .menu-item {
-            font-size: 10vw; /* Fluid size for mobile */
-            line-height: 0.85;
+            font-size: 12.5vh;
+            line-height: 0.82;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: -0.03em;
             color: var(--text-main);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            -webkit-text-stroke: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
-            padding: 1vh 0;
-            pointer-events: auto; /* CRITICAL FIX */
-        }
-
-        @media (min-width: 768px) {
-            .menu-item { font-size: 12vh; padding: 0.5vh 0; }
-            .menu-item:hover { color: transparent; -webkit-text-stroke: 2px var(--text-main); transform: translateX(-20px); }
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+            padding: 10px 0;
+            z-index: 60; 
         }
 
         .menu-tag {
-            font-size: 0.7rem;
+            font-size: 0.9rem;
+            font-weight: 500;
             font-family: 'JetBrains Mono', monospace;
             position: absolute;
-            left: -30px; top: 20%;
-            opacity: 0.4;
+            top: 25%; left: -40px;
+            color: var(--text-main);
+            opacity: 0.5; 
+            transform: translateX(10px);
+            transition: all 0.3s ease;
         }
 
-        /* --- FOOTER FIX --- */
+        .menu-item:hover {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--text-main);
+            transform: translateX(-40px) scale(1.05);
+        }
+
+        .menu-item:hover .menu-tag { opacity: 1; transform: translateX(0); }
+
+        /* --- BRANDING & FOOTER --- */
+        .branding-logo { position: absolute; top: 3rem; left: 3rem; z-index: 40; }
+        
         .footer-strip {
             position: absolute;
-            bottom: 2rem; left: 0; width: 100%;
-            padding: 0 2rem;
+            bottom: 3rem; left: 0; width: 100%;
+            padding: 0 3rem;
+            z-index: 40;
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            z-index: 10;
+            justify-content: space-between;
+            align-items: flex-end;
             pointer-events: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
-        .footer-strip a { pointer-events: auto; }
+        .footer-col-group { display: flex; gap: 4vw; pointer-events: auto; }
+        .footer-block { display: flex; flex-direction: column; }
+        .footer-block a { text-decoration: none; color: var(--text-main); transition: opacity 0.2s; }
+        .block-label { opacity: 0.5; margin-bottom: 2px; }
+        .numbered-row { display: flex; gap: 1rem; }
+        .num { opacity: 0.4; width: 2ch; display: inline-block; }
 
-        @media (min-width: 768px) {
-            .footer-strip { flex-direction: row; justify-content: space-between; bottom: 3rem; padding: 0 3rem; }
-        }
-
-        #transition-curtain {
-            position: fixed;
+        /* --- CONTENT VIEW --- */
+        #content-view {
+            position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
-            transform: translateY(100%);
+            background-color: var(--bg-color);
+            overflow-y: auto;
+            z-index: 100;
+            transform: none !important;
         }
-    </style>
-</head>
-<body>
 
-    <div id="transition-curtain"></div>
-
-    <div id="main-view">
-        <div class="absolute top-8 left-8 md:top-12 md:left-12 z-50">
-            <img src="logo.png" alt="Areen" class="h-12 md:h-20 w-auto">
-        </div>
-
-        <div class="perspective-container">
-            <div class="slanted-list">
-                <div class="menu-item" onclick="navigateTo('Hi')"><span class="menu-tag">01</span>HI</div>
-                <div class="menu-item" onclick="navigateTo('Projects')"><span class="menu-tag">02</span>PROJECTS</div>
-                <div class="menu-item" onclick="navigateTo('Research')"><span class="menu-tag">03</span>RESEARCH</div>
-                <div class="menu-item" onclick="navigateTo('Resume')"><span class="menu-tag">04</span>RESUME</div>
-                <div class="menu-item" onclick="navigateTo('Contact')"><span class="menu-tag">05</span>CONTACT</div>
-            </div>
-        </div>
-
-        <div class="footer-strip">
-            <div class="flex gap-8">
-                <div>
-                    <p class="opacity-50">Designer</p>
-                    <p>Product & Industrial</p>
-                </div>
-                <div>
-                    <p class="opacity-50">Location</p>
-                    <p>Goa / Remote</p>
-                </div>
-            </div>
-            <div class="md:text-right">
-                <p class="opacity-50">Contact</p>
-                <a href="mailto:areenpednekarbusiness@gmail.com" class="hover:underline">areenpednekarbusiness@gmail.com</a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Ensure GSAP curtain lowers on load
-        window.onload = () => {
-            gsap.to("#transition-curtain", { duration: 0.6, y: "-100%", ease: "power3.inOut" });
-        };
-
-        function navigateTo(page) {
-            const curtain = document.getElementById('transition-curtain');
-            gsap.set(curtain, { y: "100%" });
-            gsap.to(curtain, { 
-                duration: 0.6, 
-                y: "0%", 
-                ease: "power3.inOut",
-                onComplete: () => {
-                    // This is where you trigger your page visibility logic
-                    console.log("Navigating to:", page);
-                    // Example: window.location.href = page.toLowerCase() + ".html";
-                    gsap.to(curtain, { duration: 0.6, y: "-100%", ease: "power3.inOut", delay: 0.2 });
-                }
-            });
+        .content-header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 110;
+            pointer-events: none;
+            transition: color 0.3s ease;
         }
-    </script>
-</body>
-</html>
+        .content-header > * { pointer-events: auto; }
+
+        .content-header.dark-mode { color: white !important; }
+        .content-header.dark-mode .content-logo img { filter: invert(1); }
+        .content-header.dark-mode .back-btn { color: white !important; }
+
+        .back-btn { cursor: pointer; transition: transform 0.2s; color: var(--text-main); }
+        .back-btn:hover { transform: translateX(-5px); }
+
+        /* Content Hero */
+        .hero-section {
+            height: 80vh; width: 100%;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            margin-top: 10vh;
+        }
+
+        .hero-image-block {
+            width: 90%; height: 70%;
+            background-color: #f0f0f0; 
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-title-overlay {
+            position: absolute;
+            font-family: 'Inter', sans-serif; 
+            font-weight: 900;
+            font-size: clamp(2rem, 12vw, 12rem);
+            text-transform: uppercase;
+            line-height: 0.9;
+            z-index: 10;
+            color: transparent;
+            -webkit-text-stroke: 2px white; 
+            text-align: right;
+            right: 5%; bottom: 10%;
+            pointer-events: none;
+            white-space: nowrap; 
+        }
+        
+        .hero-title-dark-stroke { -webkit-text-stroke: 2px var(--text-main) !important; }
+
+        /* --- HI Hero --- */
+        #hi-content .hi-hero {
+            background-color: var(--hero-dark-bg);
+            color: white;
+            height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        #hi-content .hi-hero-grid {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.15;
+        }
+        #hi-content .hi-title { font-size: clamp(2rem, 8vw, 8rem); font-weight: 900; line-height: 1.1; text-align: center; z-index: 10; text-transform: uppercase; white-space: nowrap; }
+        #hi-content .hi-subtitle { font-size: clamp(1rem, 3vw, 2.5rem); font-weight: 400; text-align: center; z-index: 10; text-transform: uppercase; margin-bottom: 1rem; }
+
+        /* --- CONTACT --- */
+        #contact-content { background-color: var(--contact-bg); color: white; min-height: 100vh; padding-top: 100px; display: flex; flex-direction: column; }
+        .greetings-carousel { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 1.2rem; color: #888; margin-bottom: 4rem; height: 2rem; overflow: hidden; position: relative; }
+        .greeting-word { position: absolute; width: 100%; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+        .greeting-word.active { opacity: 1; transform: translateY(0); }
+        .contact
