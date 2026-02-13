@@ -13,149 +13,102 @@
         :root {
             --bg-color: #ffffff;
             --text-main: #000000;
-            --text-sub: #555555;
-            --accent-gray: #f4f4f4;
-            --hero-dark-bg: #111111; 
-            --contact-bg: #050505; 
-            --research-sidebar: #000000;
         }
 
-        body {
+        body, html {
+            margin: 0; padding: 0;
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            height: 100vh;
-            width: 100vw;
-            cursor: default;
-        }
-
-        /* --- UTILITIES --- */
-        .hidden-view { display: none !important; }
-        .hidden-content { display: none; }
-        .font-script { font-family: 'Permanent Marker', cursive; }
-        .font-pixel { font-family: 'VT323', monospace; }
-        
-        #transition-curtain {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000;
-            z-index: 9999;
-            transform: translateY(100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* --- MAIN MENU VIEW RESPONSIVE --- */
-        #main-view {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color);
             overflow: hidden;
+            height: 100%; width: 100%;
+        }
+
+        /* --- PERSPECTIVE & MENU --- */
+        #main-view {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .perspective-container {
             perspective: 1000px;
-            height: 100%; width: 100%;
+            width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center; /* Centered for mobile */
-            padding: 0 5vw;
-            transform-style: preserve-3d;
-            pointer-events: none;
-            position: relative;
-            z-index: 20;
+            justify-content: center; /* Center on mobile */
+            z-index: 50;
         }
 
         @media (min-width: 768px) {
-            .perspective-container { justify-content: flex-end; padding-right: 4vw; }
+            .perspective-container { justify-content: flex-end; padding-right: 6vw; }
         }
 
         .slanted-list {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center for mobile */
-            transform: rotate(-3deg); 
-            transform-origin: center;
-            pointer-events: auto;
+            transform: rotate(-4deg); 
+            transform-style: preserve-3d;
         }
 
         @media (min-width: 768px) {
-            .slanted-list { align-items: flex-end; transform: rotate(-6deg); transform-origin: center right; }
+            .slanted-list { align-items: flex-end; transform: rotate(-6deg); }
         }
 
         .menu-item {
-            font-size: 8vh; /* Smaller for mobile */
+            font-size: 10vw; /* Fluid size for mobile */
             line-height: 0.85;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: -0.03em;
             color: var(--text-main);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+            transition: all 0.3s ease;
             cursor: pointer;
-            white-space: nowrap;
-            user-select: none;
-            padding: 8px 0;
-            z-index: 60; 
+            position: relative;
+            padding: 1vh 0;
+            pointer-events: auto; /* CRITICAL FIX */
         }
 
         @media (min-width: 768px) {
-            .menu-item { font-size: 12.5vh; padding: 10px 0; }
+            .menu-item { font-size: 12vh; padding: 0.5vh 0; }
+            .menu-item:hover { color: transparent; -webkit-text-stroke: 2px var(--text-main); transform: translateX(-20px); }
         }
 
         .menu-tag {
             font-size: 0.7rem;
-            font-weight: 500;
             font-family: 'JetBrains Mono', monospace;
             position: absolute;
-            top: 10%;
-            left: -30px;
-            opacity: 0.5;
-            transition: all 0.3s ease;
+            left: -30px; top: 20%;
+            opacity: 0.4;
         }
 
-        @media (min-width: 768px) {
-            .menu-item:hover { color: transparent; -webkit-text-stroke: 2px var(--text-main); transform: translateX(-40px) scale(1.05); }
-            .menu-item:hover .menu-tag { opacity: 1; transform: translateX(0); }
-        }
-
-        /* --- BRANDING & FOOTER --- */
-        .branding-logo {
-            position: absolute;
-            top: 1.5rem; left: 1.5rem;
-            z-index: 40;
-        }
-        @media (min-width: 768px) { .branding-logo { top: 3rem; left: 3rem; } }
-        
+        /* --- FOOTER FIX --- */
         .footer-strip {
             position: absolute;
-            bottom: 1.5rem; left: 0; width: 100%;
-            padding: 0 1.5rem;
-            z-index: 40;
+            bottom: 2rem; left: 0; width: 100%;
+            padding: 0 2rem;
             display: flex;
-            flex-direction: column; /* Stack on mobile */
-            gap: 1rem;
-            pointer-events: none;
+            flex-direction: column;
+            gap: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.65rem;
-            color: var(--text-main);
+            z-index: 10;
+            pointer-events: none;
         }
+
+        .footer-strip a { pointer-events: auto; }
 
         @media (min-width: 768px) {
-            .footer-strip { bottom: 3rem; padding: 0 3rem; flex-direction: row; justify-content: space-between; font-size: 0.75rem; }
+            .footer-strip { flex-direction: row; justify-content: space-between; bottom: 3rem; padding: 0 3rem; }
         }
 
-        .footer-col-group { display: flex; gap: 4vw; pointer-events: auto; }
-        .block-label { opacity: 0.5; }
-
-        /* --- HI CONTENT FIXES --- */
-        .journey-item h3 { font-size: 14px; }
-        @media (max-width: 640px) {
-            .project-category-item { font-size: 12vw !important; }
-            .journey-item h3 { font-size: 10px; }
-            .greetings-carousel { font-size: 15vw !important; }
+        #transition-curtain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            transform: translateY(100%);
         }
     </style>
 </head>
@@ -164,86 +117,59 @@
     <div id="transition-curtain"></div>
 
     <div id="main-view">
-        <canvas id="logo-canvas"></canvas>
-        <div class="branding-logo" onclick="triggerLogoEffect(event)">
-            <img src="logo.png" alt="Areen Logo" class="h-12 md:h-24 w-auto">
-        </div>
-        
-        <div class="footer-strip">
-            <div class="footer-col-group">
-                <div class="footer-block">
-                    <span>Product & Industrial</span>
-                    <span>Designer</span>
-                </div>
-                <div class="footer-block">
-                    <span class="block-label">Goa / Remote</span>
-                    <a href="mailto:areenpednekarbusiness@gmail.com" class="hidden md:block">areenpednekarbusiness@gmail.com</a>
-                </div>
-            </div>
-            <div class="footer-col-group md:text-right">
-                <div class="footer-block">
-                    <span class="block-label">Design</span><span>© 2026 Areen</span>
-                </div>
-            </div>
+        <div class="absolute top-8 left-8 md:top-12 md:left-12 z-50">
+            <img src="logo.png" alt="Areen" class="h-12 md:h-20 w-auto">
         </div>
 
         <div class="perspective-container">
-            <div class="slanted-list" id="menu-list">
-                <div class="menu-item" onclick="navigateTo('Hi')"><span class="menu-tag">01</span>Hi</div>
-                <div class="menu-item" onclick="navigateTo('Projects')"><span class="menu-tag">02</span>Projects</div>
-                <div class="menu-item" onclick="navigateTo('Research')"><span class="menu-tag">03</span>Research</div>
-                <div class="menu-item" onclick="navigateTo('Resume')"><span class="menu-tag">04</span>Resume</div>
-                <div class="menu-item" onclick="navigateTo('Contact')"><span class="menu-tag">05</span>Contact</div>
+            <div class="slanted-list">
+                <div class="menu-item" onclick="navigateTo('Hi')"><span class="menu-tag">01</span>HI</div>
+                <div class="menu-item" onclick="navigateTo('Projects')"><span class="menu-tag">02</span>PROJECTS</div>
+                <div class="menu-item" onclick="navigateTo('Research')"><span class="menu-tag">03</span>RESEARCH</div>
+                <div class="menu-item" onclick="navigateTo('Resume')"><span class="menu-tag">04</span>RESUME</div>
+                <div class="menu-item" onclick="navigateTo('Contact')"><span class="menu-tag">05</span>CONTACT</div>
+            </div>
+        </div>
+
+        <div class="footer-strip">
+            <div class="flex gap-8">
+                <div>
+                    <p class="opacity-50">Designer</p>
+                    <p>Product & Industrial</p>
+                </div>
+                <div>
+                    <p class="opacity-50">Location</p>
+                    <p>Goa / Remote</p>
+                </div>
+            </div>
+            <div class="md:text-right">
+                <p class="opacity-50">Contact</p>
+                <a href="mailto:areenpednekarbusiness@gmail.com" class="hover:underline">areenpednekarbusiness@gmail.com</a>
             </div>
         </div>
     </div>
 
-    <div id="content-view" class="hidden-view">
-        <header class="content-header p-6 md:p-12 flex justify-between items-center fixed top-0 w-full z-[110]" id="global-header">
-            <div class="content-logo"><img src="logo.png" alt="Areen Logo" class="h-8 md:h-12 w-auto"></div>
-            <div class="back-btn bg-black/5 p-2 rounded-full" onclick="handleBackNavigation()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            </div>
-        </header>
+    <script>
+        // Ensure GSAP curtain lowers on load
+        window.onload = () => {
+            gsap.to("#transition-curtain", { duration: 0.6, y: "-100%", ease: "power3.inOut" });
+        };
 
-        <div id="hi-content" class="pt-24 pb-12">
-            <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="flex justify-center order-2 md:order-1">
-                     <div class="relative w-48 h-60 md:w-64 md:h-80"> 
-                         <div class="absolute -inset-2 bg-gray-100 rotate-3"></div>
-                         <img src="IMG_7646.jpg" alt="Areen" class="relative w-full h-full object-cover grayscale shadow-xl">
-                     </div>
-                </div>
-                <div class="order-1 md:order-2 text-center md:text-left">
-                    <h1 class="font-black text-3xl md:text-5xl uppercase mb-4 tracking-tighter">About Me</h1>
-                    <p class="text-gray-600 leading-relaxed text-sm md:text-base">
-                        I am a Product & Industrial Designer. I craft intuitive experiences for physical products and digital interfaces, merging Goa's creative roots with Mumbai's technical education.
-                    </p>
-                </div>
-            </div>
-
-            <div class="w-full max-w-2xl mx-auto mt-12 px-6">
-                <div class="relative">
-                    <div class="absolute top-2 left-0 w-full border-t border-dashed border-black/20"></div>
-                    <div class="flex justify-between relative z-10">
-                        <div class="journey-item flex flex-col items-center">
-                            <div class="w-3 h-3 bg-black rounded-full mb-2"></div>
-                            <h3 class="font-bold uppercase">Goa</h3>
-                        </div>
-                        <div class="journey-item flex flex-col items-center">
-                            <div class="w-3 h-3 bg-white border-2 border-black mb-2"></div>
-                            <h3 class="font-bold uppercase text-[10px] md:text-sm">Mumbai</h3>
-                        </div>
-                        <div class="journey-item flex flex-col items-center">
-                            <div class="w-3 h-3 bg-black rounded-full mb-2"></div>
-                            <h3 class="font-bold uppercase text-[10px] md:text-sm">Hyd</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        </div>
-
-    </body>
+        function navigateTo(page) {
+            const curtain = document.getElementById('transition-curtain');
+            gsap.set(curtain, { y: "100%" });
+            gsap.to(curtain, { 
+                duration: 0.6, 
+                y: "0%", 
+                ease: "power3.inOut",
+                onComplete: () => {
+                    // This is where you trigger your page visibility logic
+                    console.log("Navigating to:", page);
+                    // Example: window.location.href = page.toLowerCase() + ".html";
+                    gsap.to(curtain, { duration: 0.6, y: "-100%", ease: "power3.inOut", delay: 0.2 });
+                }
+            });
+        }
+    </script>
+</body>
 </html>
